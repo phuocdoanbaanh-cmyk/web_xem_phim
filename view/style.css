@@ -1,0 +1,250 @@
+body {
+    margin: 0;
+    overflow: hidden; 
+    background-color: #050505; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+/* Glassmorphism Panel */
+.glass-panel {
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+    width: 320px;
+    padding: 30px;
+    
+    /* Hiệu ứng kính mờ */
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    
+    color: white;
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Trạng thái ẩn của bảng thông tin */
+.glass-panel.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%) translateX(40px);
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 26px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #00ffaa, #00d4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #e0e0e0;
+}
+
+.watch-btn {
+    margin-top: 20px;
+    padding: 12px 24px;
+    background: rgba(0, 255, 170, 0.1);
+    border: 1px solid rgba(0, 255, 170, 0.4);
+    color: #00ffaa;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.watch-btn:hover {
+    background: rgba(0, 255, 170, 0.3);
+    box-shadow: 0 0 20px rgba(0, 255, 170, 0.4);
+    transform: translateY(-2px);
+}
+/* Label bám theo hành tinh/phim */
+.planet-label {
+    color: #b0b0b0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    pointer-events: none; /* Không block sự kiện click chuột */
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-shadow: 0 0 4px rgba(0,0,0,0.8);
+}
+
+/* Biểu tượng lục giác/tròn nhỏ bên cạnh tên */
+.planet-label::before {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    border: 1px solid #00d4ff;
+    border-radius: 50%;
+    background: rgba(0, 212, 255, 0.2);
+}
+
+/* ==========================================
+   CSS CHO THANH NAVBAR
+   ========================================== */
+.navbar {
+    position: fixed; /* Cố định trên cùng */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #1a1c22; /* Màu nền tối giống ảnh */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    box-sizing: border-box;
+    z-index: 1000; /* Đảm bảo luôn nằm trên canvas 3D */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+}
+
+/* 1. Logo Area */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.logo-icon i {
+    font-size: 36px;
+    color: #f7ca5e; /* Màu vàng của logo */
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-text h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+}
+
+.logo-text span {
+    font-size: 11px;
+    color: #a0a0a0;
+}
+
+/* 2. Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #2b2d35; /* Màu nền ô search */
+    padding: 0 15px;
+    border-radius: 8px;
+    width: 300px;
+    height: 40px;
+    gap: 10px;
+}
+
+.search-bar i {
+    color: #a0a0a0;
+    font-size: 14px;
+}
+
+.search-bar input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    width: 100%;
+    font-size: 14px;
+}
+
+.search-bar input::placeholder {
+    color: #a0a0a0;
+}
+
+/* 3. Navigation Links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.nav-links a {
+    color: #e5e5e5;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease;
+}
+
+.nav-links a:hover {
+    color: #f7ca5e; /* Hover đổi màu vàng */
+}
+
+.nav-links a i {
+    font-size: 12px;
+}
+
+/* Nút Badge "NEW" */
+.badge-new {
+    background-color: #f7ca5e;
+    color: #1a1c22;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* Nút viền "Diễn Viên" */
+.btn-outline {
+    border: 1px solid #e5e5e5;
+    padding: 8px 16px;
+    border-radius: 6px;
+}
+.btn-outline:hover {
+    border-color: #f7ca5e;
+}
+
+/* 4. User Button */
+.btn-user {
+    background-color: #f0f0f0; /* Màu nền trắng xám */
+    color: #1a1c22;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px; /* Bo tròn dạng viên thuốc */
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-user:hover {
+    background-color: #ffffff;
+}

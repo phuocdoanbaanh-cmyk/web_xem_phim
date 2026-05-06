@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Multiverse Vault | Thanh 3D Cinema</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+        <!-- 1. Logo -->
+        <div class="nav-brand">
+            <div class="logo-icon">
+                <i class="fa-solid fa-circle-play"></i> 
+            </div>
+            <div class="logo-text">
+                <h1>CineVerse</h1>
+                <span>Xem phim 3D</span>
+            </div>
+        </div>
+
+        <!-- 2. Thanh tìm kiếm -->
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Tìm kiếm phim, diễn viên">
+        </div>
+
+        <!-- 3. Menu Links -->
+        <nav class="nav-links">
+            <a href="#">Chủ Đề</a>
+            <a href="#">Thể loại <i class="fa-solid fa-caret-down"></i></a>
+            <a href="#">Phim Lẻ</a>
+            <a href="#">Phim Bộ</a>
+            <a href="#" class="nav-item-new"><span class="badge-new">NEW</span> Xem Chung</a>
+            <a href="#">Quốc gia <i class="fa-solid fa-caret-down"></i></a>
+            <a href="#" class="btn-outline">Diễn Viên</a>
+            <a href="#">Lịch Chiếu</a>
+        </nav>
+
+        <!-- 4. Nút User -->
+        <div class="nav-user">
+            <button class="btn-user">
+                <i class="fa-solid fa-user"></i> Thành viên
+            </button>
+        </div>
+    </header>
+
+
+
+    <!-- Canvas chứa không gian 3D -->
+    <canvas id="bg"></canvas>
+
+
+
+    <!-- UI Glassmorphism hiển thị thông tin phim -->
+    <div id="movie-info" class="glass-panel hidden">
+        <h2 id="movie-title">Tên Phim</h2>
+        <p id="movie-desc">Mô tả chi tiết về bộ phim sẽ hiển thị ở đây...</p>
+        <button class="watch-btn">Xem Trailer</button>
+    </div>
+
+    <!-- Cảnh báo nếu đang mở file trực tiếp bằng click đúp (file:///) -->
+    <div id="server-warning" style="display: none; position: absolute; top: 10px; left: 10px; color: red; background: white; padding: 10px; border-radius: 5px;">
+        Vui lòng chạy project bằng Live Server để load được model 3D!
+    </div>
+
+    <!-- Import Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script>
+        if (window.location.protocol === 'file:') {
+            document.getElementById('server-warning').style.display = 'block';
+        }
+    </script>
+    <script type="module" src="../Controller/main.js"></script>
+</body>
+</html>
