@@ -78,7 +78,7 @@ export const ChiTietPhim: React.FC<ChiTietPhimProps> = ({ movie, onBack, userAva
           className="w-full h-full object-cover opacity-20"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/90 to-[#0a0a0a]/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-[#0a0a0a]/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
       </div>
 
       {/* LAYER 2: Ảnh nhân vật bên trái — tăng độ sáng để nhìn rõ hơn */}
@@ -94,7 +94,6 @@ export const ChiTietPhim: React.FC<ChiTietPhimProps> = ({ movie, onBack, userAva
             }}
           />
           <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
-          <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#0a0a0a]/50 to-transparent" />
         </div>
       </div>
 
@@ -103,11 +102,10 @@ export const ChiTietPhim: React.FC<ChiTietPhimProps> = ({ movie, onBack, userAva
         <div className="flex items-center gap-2">
           <button
             onClick={onBack}
-            className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-lg hover:scale-110 hover:brightness-125 transition-all cursor-pointer"
-            style={{ backgroundColor: theme.primaryColor }}
-            title="Quay lại trang chủ"
+            className="group flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
           >
-            C
+            <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+            <span className="text-xs font-bold tracking-widest uppercase">Quay lại</span>
           </button>
         </div>
 

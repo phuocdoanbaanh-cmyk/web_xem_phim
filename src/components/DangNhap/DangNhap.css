@@ -220,7 +220,7 @@
 }
 
 .forgot-password:hover {
-  color: #ffcc00;
+  color: #1a1a1a;
 }
 
 .forgot-password:hover::after {

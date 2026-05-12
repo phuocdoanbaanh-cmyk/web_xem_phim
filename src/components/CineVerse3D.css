@@ -1,0 +1,151 @@
+/* CineVerse3D.css */
+
+.cineverse-3d-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 5; /* Nằm dưới Navbar nhưng trên background React */
+    background-color: #050505;
+    overflow: hidden;
+}
+
+#bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* Glassmorphism Panel */
+.glass-panel {
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+    width: 320px;
+    padding: 30px;
+    z-index: 10;
+    
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    
+    color: white;
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.glass-panel.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%) translateX(40px);
+}
+
+.glass-panel h2 {
+    margin-top: 0;
+    font-size: 26px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #00ffaa, #00d4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.glass-panel p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.watch-btn {
+    padding: 12px 24px;
+    background: rgba(0, 255, 170, 0.1);
+    border: 1px solid rgba(0, 255, 170, 0.4);
+    color: #00ffaa;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.watch-btn:hover {
+    background: rgba(0, 255, 170, 0.3);
+    box-shadow: 0 0 20px rgba(0, 255, 170, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Label bám theo hành tinh/phim */
+.planet-label {
+    color: #00d4ff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    transition: all 0.3s ease;
+    padding: 5px 15px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.planet-label:hover {
+    color: #ffffff;
+    text-shadow: 0 0 20px #00d4ff, 0 0 30px #00d4ff;
+    border-color: #00d4ff;
+    transform: scale(1.1);
+    background: rgba(0, 212, 255, 0.2);
+}
+
+.planet-label::before {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 8px;
+    border: 2px solid #00d4ff;
+    border-radius: 50%;
+    background: #00d4ff;
+    box-shadow: 0 0 10px #00d4ff;
+}
+
+/* Loading Screen */
+#loading-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #050505;
+    z-index: 9999;
+    display: flex; justify-content: center; align-items: center;
+    color: #00d4ff; font-family: 'Segoe UI', sans-serif;
+    transition: opacity 0.8s ease-out;
+}
+.loader-content { text-align: center; width: 300px; }
+.loader-content h1 { font-size: 2rem; letter-spacing: 5px; margin-bottom: 10px; }
+.loader-content p { font-size: 0.8rem; color: #8892b0; margin-bottom: 20px; text-transform: uppercase;}
+.progress-bar-container {
+    width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;
+}
+.progress-bar {
+    width: 0%; height: 100%; background: #00d4ff; box-shadow: 0 0 10px #00d4ff; transition: width 0.2s;
+}
+
+/* Core Label */
+.core-label {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    letter-spacing: 2px;
+    pointer-events: none;
+    font-size: 18px;
+}

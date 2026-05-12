@@ -11,10 +11,24 @@ interface ThanhDieuHuongProps {
   onMovieSelect?: (movie: Movie) => void;
   userAvatar?: string | null;
   onOpenAvatarSelector?: () => void;
-  onOpenLogin: () => void;
+  onBackTo3D?: () => void;
+  onOpenLogin?: () => void;
+  onReset?: () => void;
+  userName?: string | null;
 }
 
-export const ThanhDieuHuong: React.FC<ThanhDieuHuongProps> = ({ onOpenSettings, onSearch, movies = [], onMovieSelect, userAvatar, onOpenAvatarSelector, onOpenLogin }) => {
+export const ThanhDieuHuong: React.FC<ThanhDieuHuongProps> = ({ 
+  onOpenSettings, 
+  onSearch, 
+  movies = [], 
+  onMovieSelect, 
+  userAvatar, 
+  onOpenAvatarSelector, 
+  onBackTo3D, 
+  onOpenLogin,
+  onReset,
+  userName
+}) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -101,14 +115,22 @@ export const ThanhDieuHuong: React.FC<ThanhDieuHuongProps> = ({ onOpenSettings, 
       {/* Brand */}
       <div className="flex items-center gap-2">
         <div 
-          className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-lg"
+          onClick={() => window.location.reload()}
+          className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-lg cursor-pointer hover:scale-110 active:scale-95 transition-all"
           style={{ backgroundColor: theme.primaryColor }}
+          title="Làm mới trang"
         >
           C
         </div>
         <span className="text-base md:text-xl font-display font-black tracking-tighter uppercase hidden xs:block">
           CineSync
         </span>
+        <button 
+          onClick={onBackTo3D}
+          className="ml-4 px-3 py-1.5 rounded-full bg-transparent border border-white/10 text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-2"
+        >
+          🚀 Vũ trụ 3D
+        </button>
       </div>
 
       {/* Actions */}
@@ -308,33 +330,32 @@ export const ThanhDieuHuong: React.FC<ThanhDieuHuongProps> = ({ onOpenSettings, 
         >
           <Settings size={20} />
         </button>
-        {/* User Menu */}
-        <div className="relative group">
-          <div className="w-10 h-10 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center overflow-hidden cursor-pointer hover:bg-zinc-700 transition-colors">
+        {/* Auth & Profile */}
+        <div className="flex items-center gap-3">
+          {!userName ? (
+            <button 
+              onClick={onOpenLogin}
+              className="px-4 py-1.5 rounded-full bg-white/10 border border-white/20 hover:bg-white/20 text-[10px] font-bold uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
+            >
+              Sign In
+            </button>
+          ) : (
+            <div className="flex flex-col items-end mr-1">
+              <span className="text-[9px] text-zinc-500 uppercase tracking-widest font-bold">Hello,</span>
+              <span className="text-xs font-black text-white">{userName}</span>
+            </div>
+          )}
+          
+          <button 
+            onClick={onOpenAvatarSelector}
+            className="w-9 h-9 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary-500/50 transition-colors"
+          >
             {userAvatar ? (
               <img src={userAvatar} alt="Avatar" className="w-full h-full object-cover" />
             ) : (
-              <User size={20} className="text-zinc-500 group-hover:text-white transition-colors" />
+              <User size={18} className="text-zinc-400" />
             )}
-          </div>
-          
-          {/* Dropdown */}
-          <div className="absolute right-0 top-full pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right scale-95 group-hover:scale-100 z-50">
-            <div className="w-40 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 p-2 flex flex-col gap-1">
-              <button 
-                onClick={onOpenLogin}
-                className="w-full text-left px-4 py-2 text-sm font-bold text-white hover:bg-white/10 rounded-xl transition-colors"
-              >
-                Sign in
-              </button>
-              <button 
-                onClick={onOpenAvatarSelector}
-                className="w-full text-left px-4 py-2 text-sm font-bold text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
-              >
-                Change Avatar
-              </button>
-            </div>
-          </div>
+          </button>
         </div>
       </div>
     </nav>

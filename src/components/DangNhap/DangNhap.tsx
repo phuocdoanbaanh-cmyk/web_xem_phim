@@ -5,9 +5,10 @@ import './DangNhap.css';
 
 interface DangNhapProps {
   onClose: () => void;
+  onLoginSuccess?: (name: string, avatar: string) => void;
 }
 
-export const DangNhap: React.FC<DangNhapProps> = ({ onClose }) => {
+export const DangNhap: React.FC<DangNhapProps> = ({ onClose, onLoginSuccess }) => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,6 +74,7 @@ export const DangNhap: React.FC<DangNhapProps> = ({ onClose }) => {
       } else {
         setMessage({ text: 'Login successful!', type: 'success' });
         setTimeout(() => {
+          onLoginSuccess?.(email.split('@')[0], `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`);
           onClose();
         }, 1500);
       }
