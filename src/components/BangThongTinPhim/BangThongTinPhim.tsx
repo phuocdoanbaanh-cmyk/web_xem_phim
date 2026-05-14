@@ -1,0 +1,113 @@
+import React from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { X, Star, Clock, Calendar } from 'lucide-react';
+import { Movie } from '../../types';
+import './BangThongTinPhim.css';
+import { useTheme } from '@/src/hooks/useTheme';
+
+interface BangThongTinPhimProps {
+  movie: Movie | null;
+  onClose: () => void;
+}
+
+export const BangThongTinPhim: React.FC<BangThongTinPhimProps> = ({ movie, onClose }) => {
+  const { theme } = useTheme();
+
+  if (!movie) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="movie-info-overlay"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ y: 50, opacity: 0, scale: 0.95 }}
+          animate={{ y: 0, opacity: 1, scale: 1 }}
+          exit={{ y: 20, opacity: 0, scale: 0.95 }}
+          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          className="movie-info-container"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button className="movie-info-close" onClick={onClose} title="Đóng">
+            <X size={20} />
+          </button>
+
+          <div className="movie-info-content">
+            {/* Left side: Poster */}
+            <div className="movie-info-poster">
+              <img src={movie.posterUrl} alt={movie.title} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-[#18181b]" />
+            </div>
+
+            {/* Right side: Info */}
+            <div className="movie-info-details">
+              <div>
+                <h2 className="movie-info-title">{movie.title}</h2>
+                <div className="movie-info-meta">
+                  <div className="meta-item meta-rating">
+                    <Star size={16} className="fill-current" />
+                    <span>{movie.rating.toFixed(1)}</span>
+                  </div>
+                  <span>•</span>
+                  <div className="meta-item">
+                    <Calendar size={14} />
+                    <span>{movie.year}</span>
+                  </div>
+                  <span>•</span>
+                  <div className="meta-item">
+                    <Clock size={14} />
+                    <span>{movie.duration}</span>
+                  </div>
+                </div>
+              </div>
+
+              {movie.genres && movie.genres.length > 0 && (
+                <div className="movie-info-genres">
+                  {movie.genres.map((genre) => (
+                    <span key={genre} className="genre-tag" style={{ color: theme.primaryColor, backgroundColor: `${theme.primaryColor}20` }}>
+                      {genre}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <div className="movie-info-section">
+                <span className="section-title">Cốt truyện</span>
+                <p className="movie-info-desc">{movie.description}</p>
+              </div>
+
+              {movie.director && (
+                <div className="movie-info-section">
+                  <span className="section-title">Đạo diễn</span>
+                  <p className="director-name">{movie.director}</p>
+                </div>
+              )}
+
+              {movie.cast && movie.cast.length > 0 && (
+                <div className="movie-info-section flex-1 justify-end">
+                  <span className="section-title mb-2">Diễn viên chính</span>
+                  <div className="cast-list">
+                    {movie.cast.map((actor, idx) => (
+                      <div key={idx} className="cast-item">
+                        <img 
+                          src={`https://api.dicebear.com/7.x/initials/svg?seed=${actor}&backgroundColor=27272a,3f3f46,52525b`} 
+                          alt={actor} 
+                          className="cast-avatar" 
+                        />
+                        <span className="cast-name">{actor}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
