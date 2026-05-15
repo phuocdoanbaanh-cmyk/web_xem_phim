@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, ArrowLeft } from 'lucide-react';
 import ElasticSlider from './ElasticSlider';
+import Hls from 'hls.js'; // ĐÃ THÊM: Import thư viện hls.js
 import './TrinhPhatVideo.css';
 
 interface TrinhPhatVideoProps {
@@ -61,6 +62,37 @@ export const TrinhPhatVideo: React.FC<TrinhPhatVideoProps> = ({ videoUrl, title,
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isFullscreen]);
 
+  // ĐÃ THÊM: useEffect để khởi tạo HLS.js
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !videoUrl) return;
+
+    let hls: Hls;
+
+    // Chỉ dùng hls.js nếu URL là m3u8
+    if (videoUrl.includes('.m3u8')) {
+      if (Hls.isSupported()) {
+        hls = new Hls();
+        hls.loadSource(videoUrl);
+        hls.attachMedia(video);
+        
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play().catch(e => console.log('Auto-play blocked:', e));
+        });
+      } 
+      // Fallback cho Safari (tự hỗ trợ m3u8 mà không cần hls.js)
+      else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = videoUrl;
+      }
+    }
+
+    return () => {
+      if (hls) {
+        hls.destroy();
+      }
+    };
+  }, [videoUrl]);
+
   // Video events
   const handleTimeUpdate = () => {
     if (videoRef.current) {
@@ -79,7 +111,13 @@ export const TrinhPhatVideo: React.FC<TrinhPhatVideoProps> = ({ videoUrl, title,
       if (isPlaying) {
         videoRef.current.pause();
       } else {
-        videoRef.current.play();
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            console.error("Video playback failed:", error);
+            // This happens if the source is 404 or not supported
+          });
+        }
       }
       setIsPlaying(!isPlaying);
       
@@ -119,19 +157,46 @@ export const TrinhPhatVideo: React.FC<TrinhPhatVideoProps> = ({ videoUrl, title,
     }
   };
 
-  const toggleFullscreen = async () => {
-    if (!containerRef.current) return;
+  // Lắng nghe sự kiện fullscreenchange để đồng bộ state
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
+  const toggleFullscreen = async (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     
-    if (!document.fullscreenElement) {
-      await containerRef.current.requestFullscreen();
-      setIsFullscreen(true);
-    } else {
-      await document.exitFullscreen();
-      setIsFullscreen(false);
+    try {
+      if (!document.fullscreenElement) {
+        // Dùng document.documentElement thay vì containerRef vì position:fixed element 
+        // có thể bị browser từ chối fullscreen
+        const target = document.documentElement;
+        if (target.requestFullscreen) {
+          await target.requestFullscreen();
+        } else if ((target as any).webkitRequestFullscreen) {
+          (target as any).webkitRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if ((document as any).webkitExitFullscreen) {
+          (document as any).webkitExitFullscreen();
+        }
+      }
+    } catch (err) {
+      console.error('Fullscreen error:', err);
     }
   };
 
   const formatTime = (timeInSeconds: number) => {
+    if (isNaN(timeInSeconds)) return "0:00";
     const m = Math.floor(timeInSeconds / 60);
     const s = Math.floor(timeInSeconds % 60);
     return `${m}:${s < 10 ? '0' : ''}${s}`;
@@ -146,11 +211,13 @@ export const TrinhPhatVideo: React.FC<TrinhPhatVideoProps> = ({ videoUrl, title,
       onMouseMove={handleMouseMove}
       onMouseLeave={() => isPlaying && setShowControls(false)}
     >
-      <div className="video-container" onClick={togglePlay}>
+      <div className="video-container" onClick={togglePlay} style={{ backgroundColor: '#000' }}>
         <video
           ref={videoRef}
-          src={videoUrl}
+          // ĐÃ XÓA src={videoUrl} ở đây vì hls.js sẽ tự động bơm luồng video vào ref
+          src={!videoUrl.includes('.m3u8') ? videoUrl : undefined}
           className="video-element"
+          style={{ backgroundColor: '#000', width: '100%', height: '100%' }}  
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
           onEnded={() => setIsPlaying(false)}
@@ -215,7 +282,7 @@ export const TrinhPhatVideo: React.FC<TrinhPhatVideoProps> = ({ videoUrl, title,
             </div>
 
             <div className="controls-right">
-              <button className="control-btn" onClick={toggleFullscreen} title="Fullscreen (f)">
+              <button className="control-btn" onClick={(e) => toggleFullscreen(e)} title="Fullscreen (f)">
                 {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
               </button>
             </div>

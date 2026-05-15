@@ -199,7 +199,7 @@ export const ThanhDieuHuong: React.FC<ThanhDieuHuongProps> = ({
                   </div>
                   {/* Info */}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold truncate group-hover:text-white transition-colors">{movie.title}</p>
+                    <p className="text-sm font-display font-bold truncate group-hover:text-white transition-colors">{movie.title}</p>
                     <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-mono mt-1">
                       <span>{movie.year}</span>
                       <span>•</span>

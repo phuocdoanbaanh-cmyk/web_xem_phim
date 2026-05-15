@@ -50,37 +50,43 @@ const MOVIES: MovieData[] = [
 
 const TOP_FAVORITE_MOVIES = [
   { 
-    id: 1, title: "Phu Nhân Đại Quản", sub: "Perfect Crown", tags: "T16 • Phần 1 • Tập 10", genre: "Chính kịch • Tình cảm",
-    poster: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=400", 
-    cover: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=800" 
+    id: 1, movieId: '11',
+    title: "Tiếng Yêu Này Anh Dịch Được Không", sub: "Can This Love Be Translated", tags: "T16 • Phần 1 • Tập 1", genre: "Hài hước • Chính kịch • Tình cảm",
+    poster: "/images/tieng-yeu-nay-anh-dich-duoc-khong-thumb.jpg", 
+    cover: "/images/anhbia_tiengyeunayanhdichduockhong.jpg"
   },
   { 
-    id: 2, title: "Giai Ngẫu Thiên Thành", sub: "Fate Chooses You", tags: "T16 • Phần 1 • Tập 40", genre: "Cổ trang • Viễn Tưởng",
-    poster: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=400", 
-    cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=800" 
+    id: 2, movieId: '9',
+    title: "Spider-Man: Brand New Day", sub: "Spider-Man: Brand New Day", tags: "T13 • Phần 1 • Tập 1", genre: "Hành động • Phiêu lưu • Sci-Fi",
+    poster: "https://images.unsplash.com/photo-1635805737707-575885ab0820?auto=format&fit=crop&q=80&w=400", 
+    cover: "https://images.unsplash.com/photo-1635805737707-575885ab0820?auto=format&fit=crop&q=80&w=800"
   },
   { 
-    id: 3, title: "The Boys", sub: "The Boys", tags: "T18 • Phần 4 • Tập 8", genre: "Hành động • Viễn Tưởng",
-    poster: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&q=80&w=400", 
-    cover: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&q=80&w=800" 
+    id: 3, movieId: '10',
+    title: "Phí Phông: Quỷ Máu Rừng Thiêng", sub: "Phí Phông", tags: "T18 • Phần 1 • Tập 1", genre: "Kinh dị • Thriller • Chính kịch",
+    poster: "/images/phiphong.jpg", 
+    cover: "/images/phiphong.jpg"
   },
   { 
-    id: 4, title: "Huyền Thoại Lính Bếp", sub: "The Legend of Kitchen Soldier", tags: "T16 • Phần 1 • Tập 2", genre: "Hài hước • Hành động",
-    poster: "https://images.unsplash.com/photo-1585951237318-9ea5e175b891?auto=format&fit=crop&q=80&w=400", 
-    cover: "https://images.unsplash.com/photo-1585951237318-9ea5e175b891?auto=format&fit=crop&q=80&w=800" 
+    id: 4, movieId: '12',
+    title: "Huyền Thoại Lính Bếp", sub: "Legend of the Military Cook", tags: "T16 • Phần 1 • Tập 1", genre: "Hài hước",
+    poster: "/images/Huyen-Thoai-Linh-Bep-thumb.jpg", 
+    cover: "/images/bia_huyenthoailinhbep.jpg"
   },
   { 
-    id: 5, title: "Bù Nhìn Bóng Đêm", sub: "The Scarecrow", tags: "T16 • Phần 1 • Tập 8", genre: "Kinh dị • Bí ẩn",
-    poster: "https://images.unsplash.com/photo-1574267432553-4b462808152a?auto=format&fit=crop&q=80&w=400", 
-    cover: "https://images.unsplash.com/photo-1574267432553-4b462808152a?auto=format&fit=crop&q=80&w=800" 
+    id: 5, movieId: '6',
+    title: "The Batman", sub: "The Batman", tags: "T16 • Phần 1 • Tập 1", genre: "Hành động • Hình sự • Chính kịch",
+    poster: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?auto=format&fit=crop&q=80&w=400", 
+    cover: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?auto=format&fit=crop&q=80&w=800"
   },
 ];
 
 interface CineVerse3DProps {
   onMovieClick: (category: string) => void;
+  onMovieSelect?: (movieId: string) => void;
 }
 
-export const CineVerse3D: React.FC<CineVerse3DProps> = ({ onMovieClick }) => {
+export const CineVerse3D: React.FC<CineVerse3DProps> = ({ onMovieClick, onMovieSelect }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -676,7 +682,7 @@ const [showMovies, setShowMovies] = useState(false);
                   <p className="sub">{movie.sub}</p>
                   
                   <div className="action-buttons">
-                    <button className="btn-play" onClick={() => onMovieClick(movie.title)}>
+                    <button className="btn-play" onClick={() => onMovieSelect?.(movie.movieId)}>
                       ▶ Xem ngay
                     </button>
                     <button className="btn-circle">♥</button>

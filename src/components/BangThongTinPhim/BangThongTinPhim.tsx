@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Star, Clock, Calendar } from 'lucide-react';
+import { X, Star, Clock, Calendar, Play } from 'lucide-react';
 import { Movie } from '../../types';
 import './BangThongTinPhim.css';
 import { useTheme } from '@/src/hooks/useTheme';
-
+// ĐÃ SỬA: Import Component Trình phát video xịn của bạn thay vì HlsPlayer
+// Xóa dòng cũ và thay bằng dòng này:
+import { TrinhPhatVideo } from '../TrinhPhatVideo/TrinhPhatVideo';
 interface BangThongTinPhimProps {
   movie: Movie | null;
   onClose: () => void;
@@ -12,10 +14,16 @@ interface BangThongTinPhimProps {
 
 export const BangThongTinPhim: React.FC<BangThongTinPhimProps> = ({ movie, onClose }) => {
   const { theme } = useTheme();
+  const [isWatching, setIsWatching] = useState(false);
+
+  useEffect(() => {
+    setIsWatching(false);
+  }, [movie]);
 
   if (!movie) return null;
 
   return (
+    <>
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
@@ -37,14 +45,14 @@ export const BangThongTinPhim: React.FC<BangThongTinPhimProps> = ({ movie, onClo
           </button>
 
           <div className="movie-info-content">
-            {/* Left side: Poster */}
+            {/* Poster */}
             <div className="movie-info-poster">
               <img src={movie.posterUrl} alt={movie.title} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-[#18181b]" />
             </div>
 
-            {/* Right side: Info */}
-            <div className="movie-info-details">
+            {/* Chi tiết phim */}
+            <div className="movie-info-details overflow-y-auto">
               <div>
                 <h2 className="movie-info-title">{movie.title}</h2>
                 <div className="movie-info-meta">
@@ -65,8 +73,27 @@ export const BangThongTinPhim: React.FC<BangThongTinPhimProps> = ({ movie, onClo
                 </div>
               </div>
 
+              {/* TÍNH NĂNG MỚI: Chỉ hiện nút Xem Phim nếu trong Data có trường videoUrl */}
+              {!isWatching && movie.videoUrl && (
+                <button 
+                  onClick={() => setIsWatching(true)}
+                  className="flex items-center gap-2 px-6 py-3 mt-4 text-white font-bold rounded-lg transition-transform hover:scale-105 w-max shadow-[0_0_15px_rgba(0,0,0,0.3)]"
+                  style={{ backgroundColor: theme.primaryColor }}
+                >
+                  <Play size={20} className="fill-current" />
+                  XEM PHIM
+                </button>
+              )}
+
+              {/* TÍNH NĂNG MỚI: Báo cho người dùng nếu Admin chưa up link phim */}
+              {!isWatching && !movie.videoUrl && (
+                <div className="mt-4 px-4 py-2 bg-white/5 rounded-lg text-sm text-white/40 w-max border border-white/10 font-mono">
+                  Đang cập nhật link xem...
+                </div>
+              )}
+
               {movie.genres && movie.genres.length > 0 && (
-                <div className="movie-info-genres">
+                <div className="movie-info-genres mt-4">
                   {movie.genres.map((genre) => (
                     <span key={genre} className="genre-tag" style={{ color: theme.primaryColor, backgroundColor: `${theme.primaryColor}20` }}>
                       {genre}
@@ -109,5 +136,15 @@ export const BangThongTinPhim: React.FC<BangThongTinPhimProps> = ({ movie, onClo
         </motion.div>
       </motion.div>
     </AnimatePresence>
+
+    {/* GỌI TRÌNH PHÁT VIDEO CHUẨN KHI BẤM NÚT */}
+    {isWatching && movie.videoUrl && (
+      <TrinhPhatVideo 
+        videoUrl={movie.videoUrl} 
+        title={movie.title}
+        onClose={() => setIsWatching(false)} 
+      />
+    )}
+    </>
   );
 };

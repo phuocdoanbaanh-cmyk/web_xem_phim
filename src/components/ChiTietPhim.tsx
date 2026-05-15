@@ -68,7 +68,7 @@ export const ChiTietPhim: React.FC<ChiTietPhimProps> = ({ movie, onBack, userAva
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="h-screen w-full overflow-hidden relative bg-[#0a0a0a] text-white select-none"
+      className="h-screen w-full overflow-hidden relative bg-[#0a0a0a] text-white select-none flex flex-col"
     >
       {/* LAYER 1: Full-screen Backdrop (mờ nhạt) */}
       <div className="absolute inset-0">
@@ -98,7 +98,7 @@ export const ChiTietPhim: React.FC<ChiTietPhimProps> = ({ movie, onBack, userAva
       </div>
 
       {/* LAYER 3: Navbar */}
-      <nav className="relative z-50 flex items-center justify-between py-3 px-4 md:py-6 md:px-8">
+      <nav className="relative z-50 flex items-center justify-between py-2 px-4 md:py-4 md:px-8">
         <div className="flex items-center gap-2">
           <button
             onClick={onBack}
@@ -121,13 +121,13 @@ export const ChiTietPhim: React.FC<ChiTietPhimProps> = ({ movie, onBack, userAva
       </nav>
 
       {/* LAYER 4: Main Content */}
-      <div className="relative z-20 h-[calc(100vh-64px)] flex">
+      <div className="relative z-20 flex-1 flex overflow-hidden">
 
         {/* Spacer bên trái (ảnh nhân vật chiếm vùng này) */}
         <div className="hidden md:block w-[40%] lg:w-[36%] flex-shrink-0" />
 
         {/* Nội dung chính */}
-        <div className="flex-1 flex flex-col justify-between px-6 md:px-8 lg:px-12 py-4 min-w-0">
+        <div className="flex-1 flex flex-col justify-between px-6 md:px-8 lg:px-12 py-2 min-w-0">
 
           {/* Phần trên: Title + Desc + Meta */}
           <div className="flex-1 flex flex-col justify-center">
@@ -136,9 +136,9 @@ export const ChiTietPhim: React.FC<ChiTietPhimProps> = ({ movie, onBack, userAva
             initial={{ opacity: 0, x: 60 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="font-display font-black uppercase tracking-[-0.04em] leading-[0.88] mb-4 max-w-[90%]"
+            className="font-display font-black uppercase tracking-[-0.04em] leading-[0.88] mb-2 max-w-[90%]"
             style={{
-              fontSize: 'clamp(2.5rem, 6vw, 5.5rem)',
+              fontSize: 'clamp(2rem, 4.5vw, 4rem)',
               textShadow: '0 4px 60px rgba(0,0,0,0.8)',
             }}
           >
@@ -150,7 +150,7 @@ export const ChiTietPhim: React.FC<ChiTietPhimProps> = ({ movie, onBack, userAva
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35, duration: 0.6 }}
-            className="text-zinc-500 text-[12px] sm:text-sm leading-[1.7] max-w-md mb-4 font-light line-clamp-3"
+            className="text-zinc-500 text-[11px] sm:text-xs leading-[1.6] max-w-md mb-2 font-light line-clamp-2"
           >
             {movie.description}
           </motion.p>
@@ -175,7 +175,7 @@ export const ChiTietPhim: React.FC<ChiTietPhimProps> = ({ movie, onBack, userAva
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.7 }}
-            className="pb-15 w-full min-w-0"
+            className="pb-4 w-full min-w-0"
           >
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.25em] text-zinc-400">Tập phim</h3>
@@ -204,7 +204,7 @@ export const ChiTietPhim: React.FC<ChiTietPhimProps> = ({ movie, onBack, userAva
               {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                 <div
                   key={num}
-                  className="relative flex-none w-[200px] sm:w-[240px] aspect-[16/10] rounded-xl overflow-hidden group select-none"
+                  className="relative flex-none w-[160px] sm:w-[200px] aspect-[16/10] rounded-xl overflow-hidden group select-none"
                   onClick={() => { setPlayingEpisode(num); setIsPlaying(true); }}
                 >
                   <img
@@ -237,7 +237,7 @@ export const ChiTietPhim: React.FC<ChiTietPhimProps> = ({ movie, onBack, userAva
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.7, type: 'spring', damping: 15 }}
         className="absolute bottom-8 sm:bottom-12 left-6 sm:left-10 z-30 flex items-center gap-3 cursor-pointer group"
-        onClick={() => { setPlayingEpisode(0); setIsPlaying(true); }}
+        onClick={() => { setPlayingEpisode(1); setIsPlaying(true); }}
       >
         <div
           className="w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:shadow-[0_0_50px] transition-all duration-300"
@@ -255,8 +255,13 @@ export const ChiTietPhim: React.FC<ChiTietPhimProps> = ({ movie, onBack, userAva
       <AnimatePresence>
         {isPlaying && (
           <TrinhPhatVideo 
-            videoUrl="https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" 
-            title={playingEpisode === 0 ? movie.title : `${movie.title} - Tập ${playingEpisode}`} 
+            // Tập 1 dùng video local của phim, các tập khác dùng video mẫu
+            videoUrl={
+              playingEpisode === 1 && movie.videoUrl
+                ? movie.videoUrl
+                : (movie.videoUrl || "/videos/SPIDER-MAN.mp4")
+            } 
+            title={`${movie.title} - Tập ${playingEpisode}`} 
             onClose={() => setIsPlaying(false)} 
           />
         )}

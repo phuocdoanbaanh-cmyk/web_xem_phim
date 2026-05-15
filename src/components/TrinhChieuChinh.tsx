@@ -98,7 +98,18 @@ export const TrinhChieuChinh: React.FC<TrinhChieuChinhProps> = ({ movies, onMovi
             <span className="inline-block px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-[10px] md:text-xs font-mono mb-2 md:mb-4 text-zinc-300">
               {activeMovie.genres?.join(' • ')}
             </span>
-            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-9xl font-display font-black leading-[0.9] mb-3 md:mb-6 tracking-tighter uppercase max-w-[12ch] sm:max-w-none">
+            {/* THAY THẾ TOÀN BỘ THẺ h1 CŨ BẰNG ĐOẠN NÀY */}
+            {/* Tạo logic tự động điều chỉnh cỡ chữ dựa theo độ dài tên phim */}
+            <h1 
+              className="font-display font-black leading-[0.9] mb-3 md:mb-6 tracking-tighter uppercase max-w-full sm:max-w-xl lg:max-w-2xl overflow-hidden"
+              style={{ 
+                fontSize: activeMovie.title.length > 25 
+                  ? 'clamp(1.5rem, 3vw, 2.8rem)' // Dành cho tên SIÊU DÀI (> 25 ký tự)
+                  : activeMovie.title.length > 15 
+                  ? 'clamp(2rem, 4.5vw, 3.8rem)' // Dành cho tên VỪA VỪA (15 - 25 ký tự)
+                  : 'clamp(2.5rem, 6vw, 5.5rem)' // Dành cho tên NGẮN (< 15 ký tự)
+              }}
+            >
               {activeMovie.title}
             </h1>
             <p className="text-zinc-400 text-xs sm:text-base md:text-lg mb-6 md:mb-8 max-w-[280px] sm:max-w-md lg:max-w-2xl line-clamp-2 sm:line-clamp-3 md:line-clamp-4 font-light leading-relaxed">
@@ -184,7 +195,7 @@ export const TrinhChieuChinh: React.FC<TrinhChieuChinhProps> = ({ movies, onMovi
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-end p-2 md:p-4">
                       <motion.p 
                         animate={{ opacity: offset === 0 ? 1 : 0 }}
-                        className="text-[10px] md:text-sm font-bold truncate leading-none uppercase"
+                        className="text-[10px] md:text-sm font-display font-bold truncate leading-none uppercase"
                       >
                         {movie.title}
                       </motion.p>
